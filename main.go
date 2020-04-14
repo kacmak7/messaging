@@ -1,14 +1,11 @@
 package main 
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
 	
-	"github.com/kacmak7/messaging"
 )
-
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
