@@ -20,8 +20,13 @@ func initializeNode() {
 	nodes = append(nodes, local)
 }
 
-func test(w http.ResponseWriter, r *http.Request) {
-	log.Print("works")
+func ping(w http.ResponseWriter, r *http.Request) {
+	log.Print("TEST CALL") // TODO attach IP of requester
+	w.Write([]byte("pong\n"))
+}
+
+func authorize(w http.ResponseWriter, r *http.Request) {
+	log.Print("authorizing new Node")
 }
 
 func send(message string) {
