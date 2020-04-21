@@ -27,6 +27,7 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func authorize(w http.ResponseWriter, r *http.Request) {
 	log.Print("authorizing new Node")
+
 }
 
 func send(message string) {
@@ -40,7 +41,7 @@ func send(message string) {
 		if err != nil {
 			log.Print(err)
 		} else {
-		log.Print(string(resp.StatusCode))
+			log.Print(string(resp.StatusCode))
 		}
 	}
 }
