@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"bytes"
 	"log"
 )
-
 
 type Node struct {
 	Addr string
@@ -33,9 +33,10 @@ func send(message string) {
 		var jsonMessage = []byte(fmt.Sprintf(`{"message": %s}`, message))
 		resp, err := http.Post("https://" + node.Addr, "application/json", bytes.NewBuffer(jsonMessage))
 		if err != nil {
-			log.Fatal(err)
-		}
+			log.Print(err)
+		} else {
 		log.Print(string(resp.StatusCode))
+		}
 	}
 }
 
