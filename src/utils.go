@@ -1,11 +1,12 @@
 package main
 
 import (
-	"crypto/rsa"
+    "net"
+    "log"
 )
 
 
-func GetPrivateIP() net.IP {
+func GetPrivateIP() string {
     conn, err := net.Dial("udp", "8.8.8.8:80")
     if err != nil {
         log.Fatal(err)
@@ -13,6 +14,5 @@ func GetPrivateIP() net.IP {
     defer conn.Close()
 
     localAddr := conn.LocalAddr().(*net.UDPAddr)
-
-    return localAddr.IP
+    return localAddr.IP.String()
 }
