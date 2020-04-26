@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"bytes"
+	"fmt"
 	"log"
-
+	"net/http"
 	//auth "github.com/abbot/go-http-auth"
 )
 
@@ -13,7 +12,7 @@ type Node struct {
 	Addr string
 	Name string
 }
-	
+
 // list of all connected nodes
 var nodes []Node
 
@@ -40,7 +39,7 @@ func send(message string) {
 		log.Print(string(index))
 		log.Print(node.Name)
 		var jsonMessage = []byte(fmt.Sprintf(`{"message": %s}`, message))
-		resp, err := http.Post("https://" + node.Addr, "application/json", bytes.NewBuffer(jsonMessage))
+		resp, err := http.Post("https://"+node.Addr, "application/json", bytes.NewBuffer(jsonMessage))
 		if err != nil {
 			log.Print(err)
 		} else {
