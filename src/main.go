@@ -39,6 +39,7 @@ func main() {
 
 	if initCmd.Happened() {
 		initializeNode()
+		log.Print("Starting daemon process")
 		cntxt := &daemon.Context{
 			PidFileName: "sample.pid",
 			PidFilePerm: 0644,

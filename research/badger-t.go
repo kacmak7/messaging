@@ -57,4 +57,20 @@ func main() {
 
 	//
 
+	err = db.View(func(txn *badger.Txn) error {
+		item, err := txn.Get([]byte("key"))
+		if err != nil {
+			return err
+		}
+		val, err := item.ValueCopy(nil)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s\n", string(val))
+		return nil
+	})
+
+	if err != nil {
+		panic(err)
+	}
 }

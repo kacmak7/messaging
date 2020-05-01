@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	//auth "github.com/abbot/go-http-auth"
 )
 
@@ -13,11 +14,20 @@ type node struct {
 	Name string
 }
 
-// list of all connected nodes
-var nodes []node
-
 func initializeNode() {
-	log.Print("initialization")
+	log.Print("Initializing node")
+
+	// Remove old storage directory
+	if _, err := os.Stat(dbPath); os.IsExist(err) {
+		os.Remove(dbPath)
+	}
+	// initialize storage directory
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		os.Mkdir(dbPath, os.ModeDir)
+	}
+	// check connection
+	openDB()
+
 	//local := Node{GetPrivateIP(), "local"} // TEMP change to Public IP
 	//nodes = append(nodes, local)
 }
@@ -49,7 +59,8 @@ func send(message string) {
 
 func addNode(node node) {
 	log.Print("add new participant")
-	nodes = append(nodes, node)
+
+	// add to DB
 }
 
 func connect() {
