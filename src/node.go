@@ -17,6 +17,8 @@ type node struct {
 func initializeNode() {
 	log.Print("Initializing node")
 
+	// TODO 2 DATABASES BADGER
+
 	// Remove old storage directory
 	if _, err := os.Stat(dbPath); os.IsExist(err) {
 		os.Remove(dbPath)
@@ -42,8 +44,9 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 }
 
 func send(message string) {
-	// POST a message to everyone
-	log.Print("send")
+
+	// TODO fetch nodes from badger DB
+
 	for index, node := range nodes {
 		log.Print(string(index))
 		log.Print(node.Name)
@@ -61,6 +64,10 @@ func addNode(node node) {
 	log.Print("add new participant")
 
 	// add to DB
+}
+
+func listNodes() {
+
 }
 
 func connect() {

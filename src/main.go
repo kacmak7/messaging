@@ -29,7 +29,7 @@ func main() {
 
 	// Log command
 	logCmd := parser.NewCommand("log", "View messages")
-	logCmdMessageOnly := logCmd.String("message-only", &argparse.Options{Required: false, Help: "Show only messages"})
+	logCmdMessageOnly := logCmd.String("", "message-only", &argparse.Options{Required: false, Help: "Show only messages"})
 
 	err := parser.Parse(os.Args)
 	if err != nil {
