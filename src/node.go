@@ -8,13 +8,13 @@ import (
 	//auth "github.com/abbot/go-http-auth"
 )
 
-type Node struct {
+type node struct {
 	Addr string
 	Name string
 }
 
 // list of all connected nodes
-var nodes []Node
+var nodes []node
 
 func initializeNode() {
 	log.Print("initialization")
@@ -29,7 +29,6 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func authorize(w http.ResponseWriter, r *http.Request) {
 	log.Print("authorizing new Node")
-
 }
 
 func send(message string) {
@@ -48,12 +47,11 @@ func send(message string) {
 	}
 }
 
-func addNode(node Node) {
+func addNode(node node) {
 	log.Print("add new participant")
 	nodes = append(nodes, node)
 }
 
 func connect() {
 	log.Print("connect")
-
 }

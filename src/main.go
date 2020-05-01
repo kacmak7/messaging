@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/akamensky/argparse"
-	"github.com/gorilla/mux"
 	"github.com/sevlyar/go-daemon"
 )
 
@@ -69,11 +67,4 @@ func main() {
 	// DEBUG
 	send("HI HELLOooo")
 	//
-}
-
-func launchServer() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/ping", ping).Methods("GET")
-	//router.HandleFunc("/event", createEvent).Methods("POST")
-	log.Print(http.ListenAndServe(":8080", router))
 }
