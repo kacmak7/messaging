@@ -6,18 +6,20 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+
+	badger "github.com/dgraph-io/badger"
 	//auth "github.com/abbot/go-http-auth"
 )
 
-type node struct {
-	Addr string
-	Name string
-}
+// TODO maybe in future
+//type node struct {
+//	Addr string
+//	Name string
+//}
 
 func initializeNode() {
 	log.Print("Initializing node")
-
-	// TODO 2 DATABASES BADGER
 
 	// Remove old storage directory
 	if _, err := os.Stat(dbPath); os.IsExist(err) {
@@ -27,8 +29,13 @@ func initializeNode() {
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
 		os.Mkdir(dbPath, os.ModeDir)
 	}
-	// check connection
-	openDB()
+
+	// check connection with DB
+	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
 	//local := Node{GetPrivateIP(), "local"} // TEMP change to Public IP
 	//nodes = append(nodes, local)
@@ -45,22 +52,45 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 
 func send(message string) {
 
-	// TODO fetch nodes from badger DB
+	// TODO iterate through all connected nodes and send a message
 
-	for index, node := range nodes {
-		log.Print(string(index))
-		log.Print(node.Name)
-		var jsonMessage = []byte(fmt.Sprintf(`{"message": %s}`, message))
-		resp, err := http.Post("https://"+node.Addr, "application/json", bytes.NewBuffer(jsonMessage))
+	// open DB
+	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// open read-only transaction
+	err = db.View(func(txn *badger.Txn) error {
+		item, err := txn.Get([]byte("nodes"))
 		if err != nil {
-			log.Print(err)
-		} else {
-			log.Print(string(resp.StatusCode))
+			return err
 		}
+		val, err := item.ValueCopy(nil)
+		if err != nil {
+			return err
+		}
+		log.Print(string(val))
+		list := strings.Split(string(val), ":")
+		for index, node := range list {
+			log.Print(string(index) + " " + node)
+			var jsonMessage = []byte(fmt.Sprintf(`{"message": %s}`, message))
+			resp, err := http.Post("https://"+node, "application/json", bytes.NewBuffer(jsonMessage))
+			if err != nil {
+				log.Print(err)
+			} else {
+				log.Print(string(resp.StatusCode))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
 	}
 }
 
-func addNode(node node) {
+func addNode(node string) {
 	log.Print("add new participant")
 
 	// add to DB

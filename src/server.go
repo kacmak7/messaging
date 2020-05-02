@@ -14,3 +14,5 @@ func launchServer() {
 	//router.HandleFunc("/event", createEvent).Methods("POST")
 	log.Print(http.ListenAndServe(":8080", router))
 }
+
+// TODO expose to the world
