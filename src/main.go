@@ -17,6 +17,9 @@ func main() {
 	initCmd := parser.NewCommand("init", "Initialize sosimple node listener")
 	initCmdPort := initCmd.String("p", "port", &argparse.Options{Required: false, Help: "Port to allocate"})
 
+	// Daemon command
+	daemonCmd := parser.NewCommand("daemon", "Start daemon process")
+
 	// Shutdown command
 	shutdownCmd := parser.NewCommand("shutdown", "Shutdown sosimple node listener")
 
@@ -31,6 +34,9 @@ func main() {
 	logCmd := parser.NewCommand("log", "View messages")
 	logCmdMessageOnly := logCmd.String("", "message-only", &argparse.Options{Required: false, Help: "Show only messages"})
 
+	// List command
+	listCmd := parser.NewCommand("list", "List all your friends")
+
 	err := parser.Parse(os.Args)
 	if err != nil {
 		fmt.Print(parser.Usage(err))
@@ -38,7 +44,9 @@ func main() {
 	}
 
 	if initCmd.Happened() {
-		initializeNode()
+		initialize()
+		log.Print("Node successfully initialized")
+	} else if daemonCmd.Happened() {
 		log.Print("Starting daemon process")
 		cntxt := &daemon.Context{
 			PidFileName: "sample.pid",
@@ -62,7 +70,7 @@ func main() {
 		log.Print("- - - - - - - - - - - - - - -")
 		log.Print("daemon started")
 
-		launchServer() // add optional port number
+		launchServer() // TODO add optional port number
 	}
 
 	// DEBUG

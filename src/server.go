@@ -8,11 +8,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func launchServer() {
+func launchServer() { // TODO expose to the world
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/ping", ping).Methods("GET")
 	//router.HandleFunc("/event", createEvent).Methods("POST")
 	log.Print(http.ListenAndServe(":8080", router))
 }
 
-// TODO expose to the world
+func ping(w http.ResponseWriter, r *http.Request) {
+	log.Print("TEST CALL") // TODO attach IP of requester
+	w.Write([]byte("pong\n"))
+}
+
+func authorize(w http.ResponseWriter, r *http.Request) {
+	log.Print("authorizing new Node")
+}
