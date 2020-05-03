@@ -3,6 +3,7 @@ package main
 import (
 	//"flag"
 
+	"errors"
 	"log"
 	"net/http"
 
@@ -47,8 +48,9 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 
 		if !ok || len(foreignKey) < 1 {
 			log.Print("WARNING!")
-			log.Print("SOMEBODY TRIED TO CONNECT WITH YOU WITHOUT KEY")
+			log.Print("SOMEBODY TRIED TO CONNECT WITH YOU WITHOUT KEY") // TODO attach name, ip etc
 			w.Write([]byte("KEY IS MISSING"))
+			return errors.New("MISSING KEY")
 		}
 
 		// compare keys
@@ -56,7 +58,13 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 			log.Print("WARNING!")
 			log.Print("SOMEBODY TRIED TO CONNECT WITH YOU WITH WRONG KEY")
 			w.Write([]byte("WRONG KEY"))
+			return errors.New("WRONG KEY")
 		}
 		return nil
 	})
+
+	if err == nil {
+		// add node to friends
+		// TODO
+	}
 }
