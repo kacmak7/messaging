@@ -2,9 +2,9 @@ package main
 
 import (
 	//"flag"
+
 	"log"
 	"net/http"
-	"strings"
 
 	badger "github.com/dgraph-io/badger"
 	"github.com/gorilla/mux"
@@ -13,7 +13,7 @@ import (
 func launchServer() { // TODO expose to the world
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/ping", pong).Methods("GET")
-	//router.HandleFunc("/event", createEvent).Methods("POST")
+	router.HandleFunc("/join", authorize).Methods("POST")
 	log.Print(http.ListenAndServe(":8080", router))
 }
 
@@ -37,13 +37,25 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return err
 		}
-		val, err := item.ValueCopy(nil)
+		key, err := item.ValueCopy(nil)
 		if err != nil {
 			return err
 		}
-		list := strings.Split(string(val), ":")
-		for index, node := range list {
-			log.Print(string(index) + ": " + node)
+		// retrieve key of requester
+		foreignKeys, ok := r.URL.Query()["key"]
+		foreignKey := foreignKeys[0]
+
+		if !ok || len(foreignKey) < 1 {
+			log.Print("WARNING!")
+			log.Print("SOMEBODY TRIED TO CONNECT WITH YOU WITHOUT KEY")
+			w.Write([]byte("KEY IS MISSING"))
+		}
+
+		// compare keys
+		if string(key) != foreignKey {
+			log.Print("WARNING!")
+			log.Print("SOMEBODY TRIED TO CONNECT WITH YOU WITH WRONG KEY")
+			w.Write([]byte("WRONG KEY"))
 		}
 		return nil
 	})

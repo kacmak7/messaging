@@ -124,7 +124,7 @@ func join(node string) {
 			return err
 		}
 		key := string(val)
-		url := "https://" + node + "/join?key=" + key
+		url := "https://" + node + "/join"
 		var jsonMessage = []byte(fmt.Sprintf(`{"key": %s}`, key))
 		resp, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(jsonMessage)))
 		if err != nil {
@@ -136,7 +136,9 @@ func join(node string) {
 		}
 		return nil
 	})
-	// TODO synchronize databases with all new friends
+
+	// TODO synchronize databases with a friend
+
 }
 
 func list() {
