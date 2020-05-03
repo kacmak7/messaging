@@ -25,6 +25,7 @@ func main() {
 
 	// Ping command
 	pingCmd := parser.NewCommand("ping", "Ping connected Node")
+	pingCmdNode := pingCmd.String("n", "node", &argparse.Options{Required: true, Help: "Node to ping"})
 
 	// Send command
 	sendCmd := parser.NewCommand("send", "Send a message")
@@ -55,7 +56,7 @@ func main() {
 			LogFilePerm: 0640,
 			WorkDir:     "./", // TODO $HOME directory
 			Umask:       027,
-			Args:        []string{"[go-daemon sample]"},
+			Args:        []string{"[go-daemon sample]"}
 		}
 
 		d, err := cntxt.Reborn()
@@ -71,9 +72,15 @@ func main() {
 		log.Print("daemon started")
 
 		launchServer() // TODO add optional port number
+	} else if shutdownCmd.Happened() {
+		log.Print("Shutting down")
+		// TODO 
+		log.Print("not yet implemented")
+	} else if pingCmd.Happened() {
+		for i := 0; i < 6; i++ {
+			ping(pingCmdNode)
+		}
+	} else if sendCmd.Happened() {
+		send(sendCmdMessage)
 	}
-
-	// DEBUG
-	send("HI HELLOooo")
-	//
 }

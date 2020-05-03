@@ -22,8 +22,6 @@ import (
 //}
 
 func initialize() {
-	log.Print("Initializing node")
-
 	// Remove old storage directory
 	if _, err := os.Stat(dbPath); os.IsExist(err) {
 		os.Remove(dbPath)
@@ -61,6 +59,15 @@ func initialize() {
 	//nodes = append(nodes, local)
 }
 
+func ping() {
+	resp, err := http.Get("https://" + node + "/ping")
+	if err != nil {
+		log.Panic(err)
+	} else if (resp.StatusCode != 200) {
+		log.Print(respo.StatusCode + "returned")
+	}
+}
+
 func send(message string) {
 
 	// TODO iterate through all connected nodes and send a message
@@ -86,12 +93,11 @@ func send(message string) {
 		for index, node := range list {
 			log.Print(string(index) + " " + node)
 			var jsonMessage = []byte(fmt.Sprintf(`{"message": %s}`, message))
-			resp, err := http.Post("https://"+node+"/", "application/json", bytes.NewBuffer(jsonMessage))
+			resp, err := http.Post("https://" + node + "/send", "application/json", bytes.NewBuffer(jsonMessage))
 			if err != nil {
 				log.Print(err)
-			} else {
-				log.Print(string(resp.StatusCode))
 			}
+			log.Print(string(resp.StatusCode))
 		}
 		return nil
 	})

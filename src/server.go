@@ -15,9 +15,8 @@ func launchServer() { // TODO expose to the world
 	log.Print(http.ListenAndServe(":8080", router))
 }
 
-func ping(w http.ResponseWriter, r *http.Request) {
-	log.Print("TEST CALL") // TODO attach IP of requester
-	w.Write([]byte("pong\n"))
+func pong(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("PONG\n"))
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {
