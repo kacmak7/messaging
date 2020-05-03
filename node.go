@@ -107,21 +107,36 @@ func send(message *string) {
 	}
 }
 
-func join(node string, key string) {
-	log.Print("join")
-
-	//resp, err := http.NewRequest("PUT", url)
-	url := "https://" + node + "/join?key=" + key
-	resp, err := http.Post(url, "", bytes.NewBuffer([]byte("")))
+func join(node string) {
+	db, err := badger.Open(badger.DefaultOptions(dbPath))
 	if err != nil {
 		log.Panic(err)
-	} else if resp.StatusCode == 403 {
-		log.Panic("WRONG KEY")
-	} else if resp.StatusCode == 200 {
-		log.Print("CONNECTION SUCCESSFUL")
-
-		// TODO synchronize databases with all new friends
 	}
+	defer db.Close()
+
+	err = db.View(func(txn *badger.Txn) error {
+		item, err := txn.Get([]byte("key"))
+		if err != nil {
+			return err
+		}
+		val, err := item.ValueCopy(nil)
+		if err != nil {
+			return err
+		}
+		key := string(val)
+		url := "https://" + node + "/join?key=" + key
+		var jsonMessage = []byte(fmt.Sprintf(`{"key": %s}`, key))
+		resp, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(jsonMessage)))
+		if err != nil {
+			log.Panic(err)
+		} else if resp.StatusCode == 403 {
+			log.Panic("WRONG KEY")
+		} else if resp.StatusCode == 200 {
+			log.Print("CONNECTION SUCCESSFUL")
+		}
+		return nil
+	})
+	// TODO synchronize databases with all new friends
 }
 
 func list() {
