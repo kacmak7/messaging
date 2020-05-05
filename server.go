@@ -1,8 +1,6 @@
 package main
 
 import (
-	//"flag"
-
 	"errors"
 	"log"
 	"net/http"
@@ -64,7 +62,6 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err == nil {
-		// add node to friends
-		// TODO
+		updateNodes(db, GetIP(r))
 	}
 }

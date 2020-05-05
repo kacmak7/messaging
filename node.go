@@ -71,7 +71,7 @@ func ping(node *string) {
 
 func send(message *string) {
 
-	// TODO iterate through all connected nodes and send a message
+	// TODO iterate through all friends and send a message
 
 	// open DB
 	db, err := badger.Open(badger.DefaultOptions(dbPath))
