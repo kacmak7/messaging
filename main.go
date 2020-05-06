@@ -27,6 +27,10 @@ func main() {
 	pingCmd := parser.NewCommand("ping", "Ping connected Node")
 	pingCmdNode := pingCmd.String("n", "node", &argparse.Options{Required: true, Help: "Node to ping"})
 
+	// Join command
+	joinCmd := parser.NewCommand("join", "Join to node and his friends")
+	joinCmdNode := joinCmd.String("n", "node", &argparse.Options{Required: true, Help: "Node to ping"})
+
 	// Send command
 	sendCmd := parser.NewCommand("send", "Send a message")
 	sendCmdMessage := sendCmd.String("m", "message", &argparse.Options{Required: true, Help: "Message to send"})
@@ -48,15 +52,14 @@ func main() {
 		initialize()
 		log.Print("Node successfully initialized")
 	} else if daemonCmd.Happened() {
-		log.Print("Starting daemon process")
 		cntxt := &daemon.Context{
-			PidFileName: "sample.pid",
+			PidFileName: "daemon.pid",
 			PidFilePerm: 0644,
-			LogFileName: "sample.log",
+			LogFileName: "daemon.log",
 			LogFilePerm: 0640,
-			WorkDir:     "./", // TODO $HOME directory
+			WorkDir:     "./",
 			Umask:       027,
-			Args:        []string{"[go-daemon sample]"},
+			Args:        nil,
 		}
 
 		d, err := cntxt.Reborn()
@@ -71,7 +74,7 @@ func main() {
 		log.Print("- - - - - - - - - - - - - - -")
 		log.Print("daemon started")
 
-		launchServer() // TODO add optional port number
+		launchServer()
 	} else if shutdownCmd.Happened() {
 		log.Print("Shutting down")
 		// TODO
@@ -80,6 +83,8 @@ func main() {
 		for i := 0; i < 6; i++ {
 			ping(pingCmdNode)
 		}
+	} else if joinCmd.Happened() {
+		join(joinCmdNode)
 	} else if sendCmd.Happened() {
 		send(sendCmdMessage)
 	} else if logCmd.Happened() {

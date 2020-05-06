@@ -62,6 +62,7 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err == nil {
+		log.Print("updating nodes")
 		updateNodes(db, GetIP(r))
 	}
 }

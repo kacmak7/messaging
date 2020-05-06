@@ -39,7 +39,7 @@ func initialize() {
 	defer db.Close()
 
 	// write key to DB
-	log.Print("Enter Group Key: ")
+	fmt.Print("Enter Group Key: ")
 	pass, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		log.Panic(err)
@@ -107,7 +107,7 @@ func send(message *string) {
 	}
 }
 
-func join(node string) {
+func join(node *string) {
 	db, err := badger.Open(badger.DefaultOptions(dbPath))
 	if err != nil {
 		log.Panic(err)
@@ -124,7 +124,7 @@ func join(node string) {
 			return err
 		}
 		key := string(val)
-		url := "https://" + node + "/join"
+		url := "http://" + *node + "/join" // TODO change to HTTPS
 		var jsonMessage = []byte(fmt.Sprintf(`{"key": %s}`, key))
 		resp, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(jsonMessage)))
 		if err != nil {
@@ -159,9 +159,13 @@ func list() {
 		if err != nil {
 			return err
 		}
-		list := strings.Split(string(val), ":")
-		for index, node := range list {
-			log.Print(string(index) + ": " + node)
+		if val == nil {
+			fmt.Println("You're not connected to anyone")
+		} else {
+			list := strings.Split(string(val), ":")
+			for _, node := range list {
+				fmt.Println(string(node))
+			}
 		}
 		return nil
 	})

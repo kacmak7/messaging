@@ -1,3 +1,95 @@
 2020/04/25 13:38:24 - - - - - - - - - - - - - - -
 2020/04/25 13:38:24 daemon started
 2020/04/25 13:38:49 request from 127.0.0.1:63069: GET "/"
+2020/05/06 17:56:59 - - - - - - - - - - - - - - -
+2020/05/06 17:56:59 daemon started
+2020/05/06 17:57:16 request from 127.0.0.1:44218: GET "/"
+2020/05/06 17:59:10 - - - - - - - - - - - - - - -
+2020/05/06 17:59:10 daemon started
+2020/05/06 17:59:17 request from 127.0.0.1:44222: GET "/"
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+2020/05/06 18:14:21 [[go-daemon sample daemon]]
+[sub]Command required
+usage: commands <Command> [-h|--help]
+
+                Available sosimple commands
+
+Commands:
+
+  daemon  Start daemon process
+
+Arguments:
+
+  -h  --help  Print help information
+
+2020/05/06 18:15:56 - - - - - - - - - - - - - - -
+2020/05/06 18:15:56 daemon started
+2020/05/06 18:16:01 request from 127.0.0.1:44380: GET "/"
+2020/05/06 18:19:02 request from 127.0.0.1:44386: GET "/"
+2020/05/06 18:19:09 - - - - - - - - - - - - - - -
+2020/05/06 18:19:09 daemon started
+2020/05/06 18:19:12 request from 127.0.0.1:44390: GET "/"

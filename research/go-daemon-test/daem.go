@@ -5,36 +5,50 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/akamensky/argparse"
 	"github.com/sevlyar/go-daemon"
 )
 
 // To terminate the daemon use:
 //  kill `cat sample.pid`
 func main() {
-	cntxt := &daemon.Context{
-		PidFileName: "sample.pid",
-		PidFilePerm: 0644,
-		LogFileName: "sample.log",
-		LogFilePerm: 0640,
-		WorkDir:     "./",
-		Umask:       027,
-		Args:        []string{"[go-daemon sample]"},
-	}
+	parser := argparse.NewParser("commands", "Available sosimple commands")
+	daemonCmd := parser.NewCommand("daemon", "Start daemon process")
 
-	d, err := cntxt.Reborn()
+	err := parser.Parse(os.Args)
+
 	if err != nil {
-		log.Fatal("Unable to run: ", err)
-	}
-	if d != nil {
+		fmt.Print(parser.Usage(err))
 		return
 	}
-	defer cntxt.Release()
 
-	log.Print("- - - - - - - - - - - - - - -")
-	log.Print("daemon started")
+	if daemonCmd.Happened() {
+		cntxt := &daemon.Context{
+			PidFileName: "sample.pid",
+			PidFilePerm: 0644,
+			LogFileName: "sample.log",
+			LogFilePerm: 0640,
+			WorkDir:     "./",
+			Umask:       027,
+			Args:        nil,
+		}
 
-	serveHTTP()
+		d, err := cntxt.Reborn()
+		if err != nil {
+			log.Fatal("Unable to run: ", err)
+		}
+		if d != nil {
+			return
+		}
+		defer cntxt.Release()
+
+		log.Print("- - - - - - - - - - - - - - -")
+		log.Print("daemon started")
+
+		serveHTTP()
+	}
 }
 
 func serveHTTP() {
