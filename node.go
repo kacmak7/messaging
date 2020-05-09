@@ -15,12 +15,6 @@ import (
 	//auth "github.com/abbot/go-http-auth"
 )
 
-// TODO maybe in future
-//type node struct {
-//	Addr string
-//	Name string
-//}
-
 func initialize() {
 	// Remove old storage directory
 	if _, err := os.Stat(dbPath); os.IsExist(err) {
