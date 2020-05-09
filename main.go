@@ -37,7 +37,6 @@ func main() {
 
 	// Log command
 	logCmd := parser.NewCommand("log", "View messages")
-	//logCmdMessageOnly := logCmd.Flag("", "message-only", &argparse.Options{Required: false, Help: "Show only messages"})
 
 	// List command
 	listCmd := parser.NewCommand("list", "List all your friends")
@@ -88,7 +87,7 @@ func main() {
 	} else if sendCmd.Happened() {
 		send(sendCmdMessage)
 	} else if logCmd.Happened() {
-		log.Print("not yet implemented")
+		viewLog()
 	} else if listCmd.Happened() {
 		list()
 	}

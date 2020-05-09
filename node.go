@@ -17,16 +17,16 @@ import (
 
 func initialize() {
 	// Remove old storage directory
-	if _, err := os.Stat(dbPath); os.IsExist(err) {
-		os.Remove(dbPath)
+	if _, err := os.Stat(DBPath); os.IsExist(err) {
+		os.Remove(DBPath)
 	}
 	// initialize storage directory
-	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
-		os.Mkdir(dbPath, os.ModeDir)
+	if _, err := os.Stat(DBPath); os.IsNotExist(err) {
+		os.Mkdir(DBPath, os.ModeDir)
 	}
 
 	// check connection with DB
-	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	db, err := badger.Open(badger.DefaultOptions(DBPath))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -68,9 +68,9 @@ func send(message *string) {
 	// TODO iterate through all friends and send a message
 
 	// open DB
-	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	db, err := badger.Open(badger.DefaultOptions(DBPath))
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	defer db.Close()
 
@@ -101,8 +101,39 @@ func send(message *string) {
 	}
 }
 
+func viewLog() {
+
+	// openDB
+	db, err := badger.Open(badger.DefaultOptions(DBPath))
+	if err != nil {
+		log.Panic(err)
+	}
+	defer db.Close()
+
+	// open read-only transaction
+	err = db.View(func(txn *badger.Txn) error {
+		item, err := txn.Get([]byte("messages"))
+		if err != nil {
+			return err
+		}
+		val, err := item.ValueCopy(nil)
+		if err != nil {
+			return err
+		}
+		if val == nil {
+			fmt.Println("Your log history is empty")
+		} else {
+			list := strings.Split(string(val), ":")
+			for _, message := range list {
+				fmt.Println(string(message))
+			}
+		}
+		return nil
+	})
+}
+
 func join(node *string) {
-	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	db, err := badger.Open(badger.DefaultOptions(DBPath))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -137,7 +168,7 @@ func join(node *string) {
 
 func list() {
 	// open DB
-	db, err := badger.Open(badger.DefaultOptions(dbPath))
+	db, err := badger.Open(badger.DefaultOptions(DBPath))
 	if err != nil {
 		log.Panic(err)
 	}

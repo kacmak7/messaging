@@ -7,7 +7,7 @@ import (
 	badger "github.com/dgraph-io/badger"
 )
 
-var dbPath = os.Getenv("HOME") + "/.sosimple/"
+var DBPath = os.Getenv("HOME") + "/.sosimple/"
 
 func updateNodes(db *badger.DB, node string) error {
 	// open read-write transaction
